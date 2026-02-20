@@ -195,14 +195,67 @@ python fingers_motors.py
 
 ---
 
+## Distributed System Architecture (Laptop → RPi → Arduino)
+
+This project supports a distributed robotics architecture where heavy computer vision processing runs on a laptop, and the Raspberry Pi handles motor control.
+
+---
+
+## System Flow
+
+Laptop (MediaPipe Processing)  
+→ Sends motion commands over WiFi using Flask (HTTP)  
+→ Raspberry Pi receives command  
+→ Raspberry Pi sends command via USB Serial  
+→ Arduino controls motors  
+
+---
+
+## How It Works (Network Mode)
+
+1. MediaPipe runs on the laptop and detects finger gestures.
+2. Based on the number of fingers detected, a motion command is generated:
+
+   - F → Forward  
+   - B → Backward  
+   - L → Left  
+   - R → Right  
+   - S → Stop  
+
+3. The laptop sends this command to the Raspberry Pi using an HTTP request.
+4. The Raspberry Pi receives the command using a Flask server.
+5. The Raspberry Pi forwards the command to Arduino via Serial communication.
+6. Arduino drives the motors accordingly.
+
+---
+
+## Why This Architecture?
+
+- No need to install MediaPipe on Raspberry Pi  
+- Heavy processing handled by laptop  
+- Raspberry Pi remains lightweight  
+- Clean separation of vision and control  
+- Scalable and industry-style robotics setup  
+
+---
+
+## Network Requirement
+
+- Laptop and Raspberry Pi must be connected to the same WiFi network.
+- Raspberry Pi runs a Flask server.
+- Laptop sends commands using HTTP requests.
+
+---
+
 ## How It Works
 
 1. Camera captures live video  
 2. MediaPipe detects hand landmarks  
 3. Finger counting algorithm runs  
 4. Finger count converts to motion command  
-5. Command sent via Serial  
-6. Arduino controls motors  
+5. Command received by Rpi over Web Socket
+6. Command sent via Serial  
+7. Arduino controls motors  
 
 ---
 
